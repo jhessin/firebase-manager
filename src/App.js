@@ -14,29 +14,36 @@ import {
 } from '@jhessin/react-hyperscript-helpers';
 
 import {
-  Grid
-} from 'semantic-ui-react';
-
-import {
   coffeeLogo,
   reactLogo,
   plusLogo
 } from './images';
 
 import {
-  Header
+  Header,
+  Menu
 } from './components';
 
 App = (function() {
   class App extends Component {
     render() {
-      return h(Grid, h(Grid.Column, h(Grid.Row, {
-        stretched: true
-      }, h(Header, {
+      return h('div', h(Header, {
         leftImage: reactLogo,
         midImage: plusLogo,
         rightImage: coffeeLogo
-      }))));
+      }), h(Menu, {
+        loggedIn: this.state.loggedIn,
+        onLogin: () => {
+          return this.setState({
+            loggedIn: true
+          });
+        },
+        onLogout: () => {
+          return this.setState({
+            loggedIn: false
+          });
+        }
+      }));
     }
 
   };
@@ -45,7 +52,9 @@ App = (function() {
 
   App.defaultProps = {};
 
-  App.prototype.state = {};
+  App.prototype.state = {
+    loggedIn: false
+  };
 
   return App;
 

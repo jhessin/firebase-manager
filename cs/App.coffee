@@ -4,29 +4,34 @@
 import { Component } from 'react'
 # import { PropTypes } from 'prop-types'
 import { h } from '@jhessin/react-hyperscript-helpers'
-import { Grid } from 'semantic-ui-react'
-
-
 import {
   coffeeLogo
   reactLogo
   plusLogo
 } from './images'
-import { Header } from './components'
+import {
+  Header
+  Menu
+} from './components'
 
 class App extends Component
   @propTypes: {}
   @defaultProps: {}
-  state: {}
+  state: {
+    loggedIn: false
+  }
 
   render: ->
-    h Grid,
-      h Grid.Column,
-        h Grid.Row,
-          stretched: true
-          h Header,
-            leftImage: reactLogo,
-            midImage: plusLogo,
-            rightImage: coffeeLogo
+    h 'div',
+      h Header,
+        leftImage: reactLogo,
+        midImage: plusLogo,
+        rightImage: coffeeLogo
+      h Menu,
+        loggedIn: @state.loggedIn
+        onLogin: =>
+          @setState loggedIn : true
+        onLogout: =>
+          @setState loggedIn : false
 
 export default App
