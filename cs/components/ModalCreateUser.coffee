@@ -11,15 +11,27 @@ class ModalCreateUser extends Component
     render: PropTypes.func.isRequired
   }
   @defaultProps: {
-    render:-> h 'div', 'Create User'
+    render: -> h 'div', 'Create User'
   }
-  state: {}
+  state: {
+    email: ''
+    password: ''
+    confirmPass: ''
+  }
 
+  handleChange: ( e, { name, value } ) =>
+    # because coffeelint is stupid!
+    # coffeelint: disable=coffeescript_error
+    @setState({ [name]: value })
+    # coffeelint: enable=coffeescript_error
+
+  handleSubmit: =>
+    { email, password, confirmPass } = @state
+    
   render: ->
     h Modal,
       trigger: @props.render()
       h Modal.Content,
         "This is the ModalCreateUser component"
-
 
 export { ModalCreateUser }
