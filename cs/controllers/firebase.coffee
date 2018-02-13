@@ -2,14 +2,13 @@
 # ^^^ Required for React's Linter ^^^ #
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
 import * as firebase from 'firebase'
-import * as admin from 'firebase-admin'
-
-key = # Your JSON key from google cloud goes here
+# import key from './firestoreKey.json'
+import config from './firebaseConfig.json'
+# import * as admin from 'firebase-admin'
+require('firebase/firestore')
 
 # Create your data
-firebaseApp = firebase.initializeApp {
-  # Your firebase setup keys go here
-}
+firebaseApp = firebase.initializeApp config
 
 admin.initializeApp credential:
   admin.credential.cert key

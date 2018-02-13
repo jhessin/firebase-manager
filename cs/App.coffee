@@ -4,6 +4,7 @@
 import { Component } from 'react'
 # import { PropTypes } from 'prop-types'
 import { h } from '@jhessin/react-hyperscript-helpers'
+import { Container } from 'semantic-ui-react'
 import {
   coffeeLogo
   reactLogo
@@ -14,6 +15,7 @@ import { firebase, db } from './controllers'
 import {
   Header
   Menu
+  Tables
 } from './components'
 
 class App extends Component
@@ -36,5 +38,15 @@ class App extends Component
       h Menu,
         loggedIn: !!@state.user
         username: @state.user?.displayName ? undefined
-
+      if not @state.user
+        h Container,
+          text: true
+          textAlign: 'center'
+          content: 'Please login to continue'
+      else
+        h Tables,
+          items: [
+            { name: 'Bob' }
+            { name: 'Joe' }
+          ]
 export default App
