@@ -17,7 +17,7 @@ import {
 
 class Menu extends Component
   @propTypes: {
-    userName: PropTypes.string
+    username: PropTypes.string
     loggedIn: PropTypes.bool.isRequired
   }
   @defaultProps: {}
@@ -29,7 +29,7 @@ class Menu extends Component
       h Base.Item,
         h Dropdown,
           simple: true
-          text: @props.userName ? 'User'
+          text: @props.username ? 'User'
           h Dropdown.Menu,
             h ModalCreateUser,
               render: ->

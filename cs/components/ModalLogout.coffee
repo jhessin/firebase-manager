@@ -5,6 +5,7 @@ import { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import { Modal, Button } from 'semantic-ui-react'
 import { h } from '@jhessin/react-hyperscript-helpers'
+import { firebase } from '../controllers'
 
 class ModalLogout extends Component
   @propTypes: {
@@ -17,15 +18,15 @@ class ModalLogout extends Component
   }
   state: {}
 
-  render: ->
+  render: =>
     h Modal,
       trigger: @props.render()
       h Modal.Content,
-        "This is the ModalLogout component"
+        'Are you sure you wish to Logout?'
       h Modal.Actions,
         h Button,
-          onClick: => @props.onLogout()
-          'Logout'
+          onClick: -> firebase.auth().signOut()
+          'Yes'
 
 
 export { ModalLogout }

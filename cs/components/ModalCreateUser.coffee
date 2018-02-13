@@ -8,6 +8,7 @@ import {
   Label, Icon
 } from 'semantic-ui-react'
 import { h } from '@jhessin/react-hyperscript-helpers'
+import { firebase } from '../controllers'
 
 class ModalCreateUser extends Component
   @propTypes: {
@@ -47,7 +48,10 @@ class ModalCreateUser extends Component
       }
       return
 
-    # TODO: callback here
+    # create the User
+    firebase.auth().createUserWithEmailAndPassword email, password
+      .catch (error) =>
+        @setState error: error.message
 
     # clear all the fields
     @setState {

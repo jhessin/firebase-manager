@@ -8,6 +8,8 @@ import {
   Label, Icon
 } from 'semantic-ui-react'
 import { h } from '@jhessin/react-hyperscript-helpers'
+import { firebase } from '../controllers'
+
 
 class ModalLogin extends Component
   @propTypes: {
@@ -37,7 +39,10 @@ class ModalLogin extends Component
     # clear any errors
     @setState { error: false }
 
-    # TODO: callback here
+    # login
+    firebase.auth().signInWithEmailAndPassword email, password
+      .catch (error) =>
+        @setState error: error.message
 
     # clear all the fields
     @setState {

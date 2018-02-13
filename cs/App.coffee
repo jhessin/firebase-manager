@@ -9,6 +9,8 @@ import {
   reactLogo
   plusLogo
 } from './images'
+import { firebase, db } from './controllers'
+
 import {
   Header
   Menu
@@ -21,6 +23,10 @@ class App extends Component
     loggedIn: false
   }
 
+  componentWillMount: ->
+    firebase.auth().onAuthStateChanged (user)=>
+      @setState { user }
+
   render: =>
     h 'div',
       h Header,
@@ -28,10 +34,7 @@ class App extends Component
         midImage: plusLogo,
         rightImage: coffeeLogo
       h Menu,
-        loggedIn: @state.loggedIn
-        onLogin: =>
-          @setState loggedIn: true
-        onLogout: =>
-          @setState loggedIn: false
+        loggedIn: !!@state.user
+        username: @state.user?.displayName ? undefined
 
 export default App
