@@ -4,8 +4,8 @@
 import { Component } from 'react'
 import { PropTypes } from 'prop-types'
 import {
-  Modal, Form, Popup
-  Label, Icon
+  Modal, Input, Button,
+  Popup, Label, Icon
 } from 'semantic-ui-react'
 import { h } from '@jhessin/react-hyperscript-helpers'
 import { firebase } from '../controllers'
@@ -64,19 +64,21 @@ class ModalLogin extends Component
           trigger: @props.render()
           onClose: => @setState { error: false }
           h Modal.Content,
-            h Form,
-              onSubmit: @handleSubmit
-              h Form.Input,
-                label: 'Email'
-                name: 'email'
-                value: email
-                onChange: @handleChange
-              h Form.Input,
-                label: 'Password'
-                name: 'password'
-                value: password
-                onChange: @handleChange
-              h Form.Button,
-                content: 'Submit'
+            h Input,
+              label: 'Email'
+              name: 'email'
+              type: 'email'
+              value: email
+              onChange: @handleChange
+            h Input,
+              label: 'Password'
+              name: 'password'
+              type: 'password'
+              value: password
+              onChange: @handleChange
+          h Modal.Actions,
+            h Button,
+              onClick: @handleSubmit
+              content: 'Submit'
 
 export { ModalLogin }

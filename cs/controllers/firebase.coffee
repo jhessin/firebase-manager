@@ -10,10 +10,11 @@ require('firebase/firestore')
 # Create your data
 firebaseApp = firebase.initializeApp config
 
-admin.initializeApp credential:
-  admin.credential.cert key
+# admin.initializeApp credential:
+  # admin.credential.cert key
 
-db = admin.firestore
+# db = admin.firestore
+db = firebase.firestore()
 
 # Export it here
 export {
