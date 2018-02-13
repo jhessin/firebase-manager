@@ -3,7 +3,10 @@
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
 import { Component } from 'react'
 import { PropTypes } from 'prop-types'
-import { Modal } from 'semantic-ui-react'
+import {
+  Modal, Form, Popup
+  Label, Icon
+} from 'semantic-ui-react'
 import { h } from '@jhessin/react-hyperscript-helpers'
 
 class ModalCreateUser extends Component
@@ -17,21 +20,73 @@ class ModalCreateUser extends Component
     email: ''
     password: ''
     confirmPass: ''
+    error: false
   }
 
   handleChange: ( e, { name, value } ) =>
     # because coffeelint is stupid!
     # coffeelint: disable=coffeescript_error
-    @setState({ [name]: value })
+    @setState {
+      [name]: value
+    }
     # coffeelint: enable=coffeescript_error
 
   handleSubmit: =>
+    # get the current state
     { email, password, confirmPass } = @state
-    
+
+    # clear any errors
+    @setState { error: false }
+
+    # test inputs
+    if password isnt confirmPass
+      @setState {
+        error: 'Passwords do not match'
+        password: ''
+        confirmPass: ''
+      }
+      return
+
+    # TODO: callback here
+
+    # clear all the fields
+    @setState {
+      email, password, confirmPass
+    }
+
   render: ->
-    h Modal,
-      trigger: @props.render()
-      h Modal.Content,
-        "This is the ModalCreateUser component"
+    { email, password, confirmPass } = @state
+    h Popup,
+      open: !!@state.error
+      position: 'bottom center'
+      content: h Label,
+        color: 'red'
+        h Icon,
+          name: 'exclamation'
+        @state.error
+      trigger:
+        h Modal,
+          trigger: @props.render()
+          onClose: => @setState { error: false }
+          h Modal.Content,
+            h Form,
+              onSubmit: @handleSubmit
+              h Form.Input,
+                label: 'Email'
+                name: 'email'
+                value: email
+                onChange: @handleChange
+              h Form.Input,
+                label: 'Password'
+                name: 'password'
+                value: password
+                onChange: @handleChange
+              h Form.Input,
+                label: 'Confirm Password'
+                name: 'confirmPass'
+                value: confirmPass
+                onChange: @handleChange
+              h Form.Button,
+                content: 'Submit'
 
 export { ModalCreateUser }

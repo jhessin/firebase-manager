@@ -3,29 +3,75 @@
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
 import { Component } from 'react'
 import { PropTypes } from 'prop-types'
-import { Modal, Button } from 'semantic-ui-react'
+import {
+  Modal, Form, Popup
+  Label, Icon
+} from 'semantic-ui-react'
 import { h } from '@jhessin/react-hyperscript-helpers'
 
 class ModalLogin extends Component
   @propTypes: {
     render: PropTypes.func.isRequired
-    onLogin: PropTypes.func.isRequired
   }
   @defaultProps: {
-    render: -> h 'p', 'ModalLogin'
-    onLogin: ->
+    render: -> h 'div', 'Create User'
   }
-  state: {}
+  state: {
+    email: ''
+    password: ''
+    error: false
+  }
+
+  handleChange: ( e, { name, value } ) =>
+    # because coffeelint is stupid!
+    # coffeelint: disable=coffeescript_error
+    @setState {
+      [name]: value
+    }
+    # coffeelint: enable=coffeescript_error
+
+  handleSubmit: =>
+    # get the current state
+    { email, password } = @state
+
+    # clear any errors
+    @setState { error: false }
+
+    # TODO: callback here
+
+    # clear all the fields
+    @setState {
+      email, password
+    }
 
   render: ->
-    h Modal,
-      trigger: @props.render()
-      h Modal.Content,
-        "This is the ModalLogin component"
-      h Modal.Actions,
-        h Button,
-          onClick: => @props.onLogin()
-          'Login'
-
+    { email, password } = @state
+    h Popup,
+      open: !!@state.error
+      position: 'bottom center'
+      content: h Label,
+        color: 'red'
+        h Icon,
+          name: 'exclamation'
+        @state.error
+      trigger:
+        h Modal,
+          trigger: @props.render()
+          onClose: => @setState { error: false }
+          h Modal.Content,
+            h Form,
+              onSubmit: @handleSubmit
+              h Form.Input,
+                label: 'Email'
+                name: 'email'
+                value: email
+                onChange: @handleChange
+              h Form.Input,
+                label: 'Password'
+                name: 'password'
+                value: password
+                onChange: @handleChange
+              h Form.Button,
+                content: 'Submit'
 
 export { ModalLogin }

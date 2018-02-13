@@ -19,13 +19,11 @@ class Menu extends Component
   @propTypes: {
     userName: PropTypes.string
     loggedIn: PropTypes.bool.isRequired
-    onLogin: PropTypes.func.isRequired
-    onLogout: PropTypes.func.isRequired
   }
   @defaultProps: {}
   state: {}
 
-  render: ->
+  render: =>
     h Base,
       inverted: true
       h Base.Item,
@@ -42,13 +40,11 @@ class Menu extends Component
                 render: ->
                   h Dropdown.Item,
                     text: 'Logout'
-                onLogout: @props.onLogout
             else
               h ModalLogin,
                 render: ->
                   h Dropdown.Item,
                     text: 'Login'
-                onLogin: @props.onLogin
 
 
 export { Menu }

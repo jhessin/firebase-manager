@@ -1,7 +1,8 @@
+# coffeelint: disable=no_debugger
 fs = require('fs')
 path = require('path')
 
-{spawn, spawnSync} = require 'child_process'
+{ spawn, spawnSync } = require 'child_process'
 
 src = 'cs'
 dest = 'src'
@@ -55,7 +56,7 @@ copyDecaf = (src) ->
 watchDecaf = (src) ->
   console.log "watching #{src} -- beginning --"
   files = fs.watch src, { recursive: true }, (eventType, filename) ->
-    filename = "cs/" + filename
+    filename = 'cs/' + filename
     if fs.existsSync filename
       copy filename
     else

@@ -21,7 +21,7 @@ class App extends Component
     loggedIn: false
   }
 
-  render: ->
+  render: =>
     h 'div',
       h Header,
         leftImage: reactLogo,
@@ -30,8 +30,8 @@ class App extends Component
       h Menu,
         loggedIn: @state.loggedIn
         onLogin: =>
-          @setState loggedIn : true
+          @setState loggedIn: true
         onLogout: =>
-          @setState loggedIn : false
+          @setState loggedIn: false
 
 export default App
