@@ -16,17 +16,33 @@ class ModalLogout extends Component
     render: -> h 'p', 'ModalLogout'
     onLogout: ->
   }
-  state: {}
+  state: {
+    open: false
+  }
+
+  close: =>
+    @setState { open: false }
+
+  open: =>
+    @setState { open: true }
 
   render: =>
     h Modal,
       trigger: @props.render()
+      open: @state.open
+      onOpen: @open
+      onClose: @close
       h Modal.Content,
         'Are you sure you wish to Logout?'
       h Modal.Actions,
         h Button,
+          color: 'green'
           onClick: -> firebase.auth().signOut()
           'Yes'
+        h Button,
+          color: 'red'
+          onClick: @close
+          'No'
 
 
 export { ModalLogout }
