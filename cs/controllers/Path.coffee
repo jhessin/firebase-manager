@@ -62,17 +62,17 @@ class Path
           resolve doc.data(), unsub
 
 
-Object.defineProperty Path, 'isCollection',
-  get: =>
+Object.defineProperty Path.prototype, 'isCollection',
+  # coffeelint: disable=missing_fat_arrows
+  get: ->
+    # coffeelint: enable=missing_fat_arrows
     @ref instanceOf firebase.firestore.CollectionReference
-  set: ->
 
 Object.defineProperty Path.prototype, 'isDoc',
   # coffeelint: disable=missing_fat_arrows
   get: ->
+    # coffeelint: enable=missing_fat_arrows
     @ref instanceOf firebase.firestore.DocumentReference
-  set: ->
-  # coffeelint: enable=missing_fat_arrows
 
 # Export it here
 export {
