@@ -10,7 +10,7 @@ import {
   reactLogo
   plusLogo
 } from './images'
-import { firebase, db } from './controllers'
+import { firebase } from './controllers'
 
 import {
   Header
