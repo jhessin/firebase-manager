@@ -7,8 +7,6 @@ require('firebase/firestore')
 db = firebase.firestore()
 
 class Path
-  @DEFAULT_COLLECTION: 'sub'
-
   @fromRef: (ref)->
     new Path { fromRef: ref }
 
@@ -35,16 +33,25 @@ class Path
 
   # Pushes new data to the server
   # If this is not a collection then the data is pushed to a new
-  # subcollection of Path.DEFAULT_COLLECTION
+  # sibling document in the parent
   push: (data)->
     ref =
     if @isCollection
       @ref.doc()
     else
-      @ref.collection(Path.DEFAULT_COLLECTION).doc()
+      @ref.parent.doc()
     ref.set(data)
     new Path
       fromRef: ref
+
+  # Updates the data in a DocumentReference
+  # Otherwise it updates the data at the parent
+  # document if this is a subcollection or does nothing otherwise.
+  update: (data)->
+    if @isDoc
+      @ref.update(data)
+    else
+      @ref.parent?.update(data)
 
   # on() returns a promise resolving to:
   # data: an array for collections or just the data for a document
@@ -61,15 +68,19 @@ class Path
         @ref.onSnapshot (doc)->
           resolve doc.data(), unsub
 
+  # delete a document or a collection
+  delete: ->
+    if @isDoc
+      return @ref.delete()
+
+
 
 Object.defineProperty Path.prototype, 'isCollection',
   # coffeelint: disable=missing_fat_arrows
   get: ->
-    # coffeelint: enable=missing_fat_arrows
     @ref instanceOf firebase.firestore.CollectionReference
 
 Object.defineProperty Path.prototype, 'isDoc',
-  # coffeelint: disable=missing_fat_arrows
   get: ->
     # coffeelint: enable=missing_fat_arrows
     @ref instanceOf firebase.firestore.DocumentReference
