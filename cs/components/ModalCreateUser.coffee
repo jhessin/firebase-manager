@@ -25,12 +25,9 @@ class ModalCreateUser extends Component
   }
 
   handleChange: ( e, { name, value } ) =>
-    # because coffeelint is stupid!
-    # coffeelint: disable=coffeescript_error
     @setState {
       [name]: value
     }
-    # coffeelint: enable=coffeescript_error
 
   handleSubmit: =>
     # get the current state

@@ -23,6 +23,7 @@ class App extends Component
   @defaultProps: {}
   state: {
     loggedIn: false
+    tables: []
   }
 
   componentWillMount: ->
@@ -45,8 +46,9 @@ class App extends Component
           content: 'Please login to continue'
       else
         h Tables,
-          items: [
-            { name: 'Bob' }
-            { name: 'Joe' }
-          ]
+          items: @state.tables
+          onAdd: (name)=>
+            tables = [@state.tables...]
+            tables.push { name }
+            @setState { tables }
 export default App

@@ -11,7 +11,7 @@ class Path
     new Path { fromRef: ref }
 
   constructor: ({ fromRef })->
-    @isCollection = fromRef? instanceOf firebase.firestore.CollectionReference
+    @isCollection = fromRef? instanceof firebase.firestore.CollectionReference
     @ref = fromRef ? db
 
   to: (path)->
@@ -30,6 +30,8 @@ class Path
         else
           @ref.collection(key).doc value
         return Path.fromRef ref
+      else
+        @
 
   # Pushes new data to the server
   # If this is not a collection then the data is pushed to a new
@@ -41,8 +43,7 @@ class Path
     else
       @ref.parent.doc()
     ref.set(data)
-    new Path
-      fromRef: ref
+    Path.fromRef ref
 
   # Updates the data in a DocumentReference
   # Otherwise it updates the data at the parent
@@ -52,38 +53,47 @@ class Path
       @ref.update(data)
     else
       @ref.parent?.update(data)
+    @
 
   # on() returns a promise resolving to:
   # data: an array for collections or just the data for a document
   # unsub: an unsubscribe function to call and unsubscribe as a listener
-  on: ->
-    new Promise (resolve, reject)=>
-      unsub = if @isCollection
-        @ref.onSnapshot (querySnapshot)->
-          data = []
-          querySnapshot.forEach (doc)->
-            data.push doc.data()
-          resolve data, unsub
-      else
-        @ref.onSnapshot (doc)->
-          resolve doc.data(), unsub
+  on: (cb)->
+    unsub = if @isCollection
+      @ref.onSnapshot (querySnapshot)->
+        data = []
+        querySnapshot.forEach (doc)->
+          if doc.exists
+            # coffeelint: disable=coffeescript_error
+            data.push { doc.data()..., id: doc.id }
+            # coffeelint: enable=coffeescript_error
+        cb data, unsub
+    else
+      @ref.onSnapshot (doc)->
+        if doc.exists
+          # coffeelint: disable=coffeescript_error
+          cb { doc.data()..., id: doc.id }, unsub
+          # coffeelint: enable=coffeescript_error
+    @
 
-  # delete a document or a collection
-  delete: ->
+  # delete a document
+  delete: (key)->
     if @isDoc
-      return @ref.delete()
-
-
+      ref = @ref.parent
+      @ref.delete()
+      return Path.fromRef ref
+    @ref.doc(key).delete()
+    return @
 
 Object.defineProperty Path.prototype, 'isCollection',
   # coffeelint: disable=missing_fat_arrows
   get: ->
-    @ref instanceOf firebase.firestore.CollectionReference
+    @ref instanceof firebase.firestore.CollectionReference
 
 Object.defineProperty Path.prototype, 'isDoc',
   get: ->
     # coffeelint: enable=missing_fat_arrows
-    @ref instanceOf firebase.firestore.DocumentReference
+    @ref instanceof firebase.firestore.DocumentReference
 
 # Export it here
 export {

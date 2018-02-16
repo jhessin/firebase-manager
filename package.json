@@ -22,7 +22,7 @@
     "cont": "yo coffee-react:cont"
   },
   "devDependencies": {
-    "coffeelint": "latest",
-    "coffeescript": "latest"
+    "coffeelint": "^2.1.0",
+    "coffeescript": "^2.2.1"
   }
 }
