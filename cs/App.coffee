@@ -5,12 +5,13 @@ import { Component } from 'react'
 # import { PropTypes } from 'prop-types'
 import { h } from '@jhessin/react-hyperscript-helpers'
 import { Container } from 'semantic-ui-react'
+import { Set, Map } from 'immutable'
 import {
   coffeeLogo
   reactLogo
   plusLogo
 } from './images'
-import { firebase } from './controllers'
+import { firebase, Path } from './controllers'
 
 import {
   Header
@@ -22,13 +23,25 @@ class App extends Component
   @propTypes: {}
   @defaultProps: {}
   state: {
-    loggedIn: false
-    tables: []
+    user: null
+    path: null
+    tables: new Set()
   }
 
   componentWillMount: ->
     firebase.auth().onAuthStateChanged (user)=>
-      @setState { user }
+      if user
+        path = Path.fromRef().to({ users: user.uid }).to('Tables')
+        path.on (tables, @unsub)=>
+          @setState (prevState, props) -> {
+            prevState...
+            tables
+          }
+      @setState (prevState, props) -> {
+        prevState...
+        path, user
+      }
+
 
   render: =>
     h 'div',
@@ -37,7 +50,7 @@ class App extends Component
         midImage: plusLogo,
         rightImage: coffeeLogo
       h Menu,
-        loggedIn: !!@state.user
+        loggedIn: !!@state.path
         username: @state.user?.displayName ? undefined
       if not @state.user
         h Container,
@@ -46,9 +59,7 @@ class App extends Component
           content: 'Please login to continue'
       else
         h Tables,
-          items: @state.tables
+          items: @state.tables.toArray()
           onAdd: (name)=>
-            tables = [@state.tables...]
-            tables.push { name }
-            @setState { tables }
+            @state.path?.push { name }
 export default App

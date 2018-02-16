@@ -3,7 +3,10 @@
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
 import { Component } from 'react'
 import { PropTypes } from 'prop-types'
-import { Item, Form } from 'semantic-ui-react'
+import {
+  Container, Label
+  Form, Grid
+} from 'semantic-ui-react'
 
 import { h } from '@jhessin/react-hyperscript-helpers'
 
@@ -25,26 +28,36 @@ class Tables extends Component
     }
 
   onSubmit: =>
+    @props.onAdd @state.newTableName
     @setState {
       newTableName: ''
     }
-    @props.onAdd @state.newTableName
 
   renderItem: (item)->
-    h Item,
-      header: item.name
+    h Grid.Row,
+      key: item.get 'name'
+      h Grid.Column,
+        h Label,
+          size: 'massive'
+          content: item.get 'name'
 
   render: =>
-    h Item.Group,
-      divided: true
-      @renderItem item for item in @props.items
-      h Form,
-        onSubmit: @onSubmit
-        h Form.Input,
-          placeholder: 'New Table'
-          name: 'newTableName'
-          value: @state.newTableName
-          onChange: @onChange
+    h Container,
+      textAlign: 'center'
+      h Grid,
+        centered: true
+        stretched: true
+        columns: 2
+        @renderItem item for item in @props.items
+      h Grid.Row,
+        columns: 1
+        h Form,
+          size: 'massive'
           onSubmit: @onSubmit
+          h Form.Input,
+            placeholder: 'New Table'
+            name: 'newTableName'
+            value: @state.newTableName
+            onChange: @onChange
 
 export { Tables }

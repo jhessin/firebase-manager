@@ -2,16 +2,18 @@
 # ^^^ Required for React's Linter ^^^ #
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
 import { firebase } from './firebase'
+import { Set, Map } from 'immutable'
 require('firebase/firestore')
 
 db = firebase.firestore()
 
 class Path
+  @new: (args...)->
+    new Path(args...)
   @fromRef: (ref)->
     new Path { fromRef: ref }
 
   constructor: ({ fromRef })->
-    @isCollection = fromRef? instanceof firebase.firestore.CollectionReference
     @ref = fromRef ? db
 
   to: (path)->
@@ -61,28 +63,28 @@ class Path
   on: (cb)->
     unsub = if @isCollection
       @ref.onSnapshot (querySnapshot)->
-        data = []
+        data = new Set()
         querySnapshot.forEach (doc)->
           if doc.exists
             # coffeelint: disable=coffeescript_error
-            data.push { doc.data()..., id: doc.id }
+            data = data.add Map({ doc.data()..., id: doc.id })
             # coffeelint: enable=coffeescript_error
         cb data, unsub
     else
       @ref.onSnapshot (doc)->
         if doc.exists
           # coffeelint: disable=coffeescript_error
-          cb { doc.data()..., id: doc.id }, unsub
+          cb Map({ doc.data()..., id: doc.id }), unsub
           # coffeelint: enable=coffeescript_error
     @
 
   # delete a document
-  delete: (key)->
+  delete: (id)->
     if @isDoc
       ref = @ref.parent
       @ref.delete()
       return Path.fromRef ref
-    @ref.doc(key).delete()
+    @ref.doc(id).delete()
     return @
 
 Object.defineProperty Path.prototype, 'isCollection',
