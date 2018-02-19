@@ -5,7 +5,7 @@ import { Component } from 'react'
 # import { PropTypes } from 'prop-types'
 import { h } from '@jhessin/react-hyperscript-helpers'
 import { Container } from 'semantic-ui-react'
-import { Set, Map } from 'immutable'
+import { Set } from 'immutable'
 import {
   coffeeLogo
   reactLogo
@@ -30,36 +30,33 @@ class App extends Component
 
   componentWillMount: ->
     firebase.auth().onAuthStateChanged (user)=>
-      if user
-        path = Path.fromRef().to({ users: user.uid }).to('Tables')
-        path.on (tables, @unsub)=>
-          @setState (prevState, props) -> {
-            prevState...
-            tables
-          }
-      @setState (prevState, props) -> {
-        prevState...
-        path, user
+      path = if !!user then Path.new.to({ users: user.uid }).to 'Tables'
+      @setState {
+        user
+        path
       }
+      path?.on (tables, @unsub)=> @setState { tables }
 
+  componentWillUnmount: ->
+    @unsub?()
 
-  render: =>
+  render: ->
     h 'div',
       h Header,
         leftImage: reactLogo,
         midImage: plusLogo,
         rightImage: coffeeLogo
       h Menu,
-        loggedIn: !!@state.path
+        loggedIn: !!@state.user
         username: @state.user?.displayName ? undefined
-      if not @state.user
-        h Container,
-          text: true
-          textAlign: 'center'
-          content: 'Please login to continue'
-      else
+      if !!@state.user
         h Tables,
           items: @state.tables.toArray()
           onAdd: (name)=>
             @state.path?.push { name }
+      else
+        h Container,
+          text: true
+          textAlign: 'center'
+          content: 'Please login to continue'
 export default App

@@ -2,11 +2,10 @@
   "name": "database",
   "version": "0.1.0",
   "private": true,
+  "description": "A website for databases using React and CoffeeScript",
   "dependencies": {
     "@jhessin/react-hyperscript-helpers": "latest",
     "firebase": "^4.9.1",
-    "firebase-admin": "^5.8.1",
-    "fs": "^0.0.1-security",
     "immutable": "^3.8.2",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

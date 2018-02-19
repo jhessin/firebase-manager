@@ -8,13 +8,10 @@ require('firebase/firestore')
 db = firebase.firestore()
 
 class Path
-  @new: (args...)->
-    new Path(args...)
   @fromRef: (ref)->
-    new Path { fromRef: ref }
+    new Path { ref }
 
-  constructor: ({ fromRef })->
-    @ref = fromRef ? db
+  constructor: ({ @ref = db })->
 
   to: (path)->
     switch typeof path
@@ -84,8 +81,8 @@ class Path
       ref = @ref.parent
       @ref.delete()
       return Path.fromRef ref
-    @ref.doc(id).delete()
-    return @
+    @ref.doc(id?).delete()
+    @
 
 Object.defineProperty Path.prototype, 'isCollection',
   # coffeelint: disable=missing_fat_arrows
@@ -95,9 +92,12 @@ Object.defineProperty Path.prototype, 'isCollection',
 Object.defineProperty Path.prototype, 'isDoc',
   get: ->
     # coffeelint: enable=missing_fat_arrows
-    @ref instanceof firebase.firestore.DocumentReference
+    not @ref instanceof firebase.firestore.CollectionReference
+
+Object.defineProperty Path, 'new',
+  # coffeelint: disable=missing_fat_arrows
+  get: -> new Path()
+  # coffeelint: enable=missing_fat_arrows
 
 # Export it here
-export {
-  Path
-}
+export { Path }
