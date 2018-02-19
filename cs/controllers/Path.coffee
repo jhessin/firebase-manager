@@ -9,9 +9,9 @@ db = firebase.firestore()
 
 class Path
   @fromRef: (ref)->
-    new Path { ref }
+    new Path ref
 
-  constructor: ({ @ref = db })->
+  constructor: (@ref = db)->
 
   to: (path)->
     switch typeof path
@@ -87,12 +87,12 @@ class Path
 Object.defineProperty Path.prototype, 'isCollection',
   # coffeelint: disable=missing_fat_arrows
   get: ->
-    @ref instanceof firebase.firestore.CollectionReference
+    @ref.doc? and @ref.firestore?
 
 Object.defineProperty Path.prototype, 'isDoc',
   get: ->
     # coffeelint: enable=missing_fat_arrows
-    not @ref instanceof firebase.firestore.CollectionReference
+    not @isCollection
 
 Object.defineProperty Path, 'new',
   # coffeelint: disable=missing_fat_arrows

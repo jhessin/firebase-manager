@@ -35,7 +35,7 @@ class Tables extends Component
 
   renderItem: (item)->
     h Grid.Row,
-      key: item.get 'name'
+      key: item.get 'id'
       h Grid.Column,
         h Label,
           size: 'massive'
