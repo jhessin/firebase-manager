@@ -28,13 +28,18 @@ class Tables extends Component
     }
 
   onSubmit: =>
-    if not @props.items.find( (value) =>
-      console.log typeof value.get 'name'
-      value.get 'name' is @state.newTableName)
-        @props.path?.push { name: @state.newTableName }
-        @setState {
-          newTableName: ''
-        }
+    existing = @props.items.find(
+      (value) =>
+        value.get('name').trim() is
+        @state.newTableName.trim()
+      @props.items
+      false
+    )
+    if not existing
+      @props.path?.push { name: @state.newTableName }
+      @setState {
+        newTableName: ''
+      }
 
   renderItem: (item)->
     h Grid.Row,
