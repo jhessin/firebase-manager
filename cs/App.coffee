@@ -51,9 +51,8 @@ class App extends Component
         username: @state.user?.displayName ? undefined
       if !!@state.user
         h Tables,
-          items: @state.tables.toArray()
-          onAdd: (name)=>
-            @state.path?.push { name }
+          path: @state.path
+          items: @state.tables
       else
         h Container,
           text: true

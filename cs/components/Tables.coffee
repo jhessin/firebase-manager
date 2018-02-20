@@ -3,6 +3,7 @@
 ###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
 import { Component } from 'react'
 import { PropTypes } from 'prop-types'
+import { Set } from 'immutable'
 import {
   Container, Label
   Form, Grid
@@ -12,11 +13,10 @@ import { h } from '@jhessin/react-hyperscript-helpers'
 
 class Tables extends Component
   @propTypes: {
-    items: PropTypes.arrayOf(PropTypes.object)
-    onAdd: PropTypes.func
+    path: PropTypes.object.isRequired
+    items: PropTypes.instanceOf(Set)
   }
   @defaultProps: {
-    onAdd: ->
   }
   state: {
     newTableName: ''
@@ -28,10 +28,13 @@ class Tables extends Component
     }
 
   onSubmit: =>
-    @props.onAdd @state.newTableName
-    @setState {
-      newTableName: ''
-    }
+    if not @props.items.find( (value) =>
+      console.log typeof value.get 'name'
+      value.get 'name' is @state.newTableName)
+        @props.path?.push { name: @state.newTableName }
+        @setState {
+          newTableName: ''
+        }
 
   renderItem: (item)->
     h Grid.Row,
@@ -48,7 +51,7 @@ class Tables extends Component
         centered: true
         stretched: true
         columns: 2
-        @renderItem item for item in @props.items
+        @renderItem item for item in @props.items.toArray()
       h Grid.Row,
         columns: 1
         h Form,
