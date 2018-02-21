@@ -1,6 +1,6 @@
-###   eslint-disable import/first   ###
-# ^^^ Required for React's Linter ^^^ #
-###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
+###       eslint-disable        ###
+### Required for React's Linter ###
+###*****************************###
 import { firebase } from './firebase'
 import { Set, Map } from 'immutable'
 require('firebase/firestore')
@@ -12,6 +12,7 @@ class Path
     new Path ref
 
   constructor: (@ref = db)->
+    @subs = []
 
   to: (path)->
     switch typeof path
@@ -66,14 +67,20 @@ class Path
             # coffeelint: disable=coffeescript_error
             data = data.add Map({ doc.data()..., id: doc.id })
             # coffeelint: enable=coffeescript_error
-        cb data, unsub
+        cb data
     else
       @ref.onSnapshot (doc)->
         if doc.exists
           # coffeelint: disable=coffeescript_error
-          cb Map({ doc.data()..., id: doc.id }), unsub
+          cb Map({ doc.data()..., id: doc.id })
           # coffeelint: enable=coffeescript_error
+    @subs.push(unsub)
     @
+
+  #clear all subscriptions
+  unsubscribeAll: ->
+    for unsub in @subs
+      unsub?()
 
   # delete a document
   delete: (id)->

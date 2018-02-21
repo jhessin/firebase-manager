@@ -1,6 +1,6 @@
-###   eslint-disable import/first   ###
-# ^^^ Required for React's Linter ^^^ #
-###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
+###       eslint-disable        ###
+### Required for React's Linter ###
+###*****************************###
 import * as firebase from 'firebase'
 import config from './firebaseConfig.json'
 # Create your data

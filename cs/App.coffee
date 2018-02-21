@@ -1,6 +1,6 @@
-###   eslint-disable import/first   ###
-# ^^^ Required for React's Linter ^^^ #
-###^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^###
+###       eslint-disable        ###
+### Required for React's Linter ###
+###*****************************###
 import { Component } from 'react'
 # import { PropTypes } from 'prop-types'
 import { h } from '@jhessin/react-hyperscript-helpers'
@@ -16,7 +16,7 @@ import { firebase, Path } from './controllers'
 import {
   Header
   Menu
-  Tables
+  PathView
 } from './components'
 
 class App extends Component
@@ -35,10 +35,10 @@ class App extends Component
         user
         path
       }
-      path?.on (tables, @unsub)=> @setState { tables }
+      path?.on (tables)=> @setState { tables }
 
   componentWillUnmount: ->
-    @unsub?()
+    @state.path?.unsubscribeAll()
 
   render: ->
     h 'div',
@@ -50,9 +50,11 @@ class App extends Component
         loggedIn: !!@state.user
         username: @state.user?.displayName ? undefined
       if !!@state.user
-        h Tables,
+        # h Tables,
+        #   path: @state.path
+        #   items: @state.tables
+        h PathView,
           path: @state.path
-          items: @state.tables
       else
         h Container,
           text: true
